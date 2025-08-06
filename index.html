@@ -1,13 +1,128 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + TS</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.ts"></script>
-  </body>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CPU 性能可视化模拟器</title>
+</head>
+<body>
+  <div id="app">
+    <!-- 头部控制面板 -->
+    <header class="control-panel">
+      <h1>CPU 性能可视化模拟器</h1>
+      <div class="mode-selector">
+        <button id="pipeline-mode" class="mode-btn active">流水线模式</button>
+        <button id="performance-mode" class="mode-btn">性能公式模式</button>
+      </div>
+    </header>
+
+    <!-- 主要3D视图区域 -->
+    <main class="visualization-container">
+      <div id="three-canvas"></div>
+      
+      <!-- 流水线控制面板 -->
+      <div id="pipeline-controls" class="controls-panel">
+        <h2>流水线控制</h2>
+        <div class="control-group">
+          <label>指令序列：</label>
+          <textarea id="instruction-input" rows="4" placeholder="输入指令序列，每行一条指令
+例如：
+ADD R1, R2, R3
+SUB R4, R1, R5
+MUL R6, R7, R8"></textarea>
+          <button id="load-instructions">加载指令</button>
+        </div>
+        
+        <div class="control-group">
+          <label>时钟频率 (MHz)：</label>
+          <input type="range" id="clock-rate" min="100" max="5000" value="1000" step="100">
+          <span id="clock-rate-value">1000</span> MHz
+        </div>
+        
+        <div class="control-group">
+          <label>模拟速度：</label>
+          <input type="range" id="sim-speed" min="0.1" max="3" value="1" step="0.1">
+          <span id="sim-speed-value">1.0</span>x
+        </div>
+        
+        <div class="control-buttons">
+          <button id="play-btn">▶ 开始</button>
+          <button id="pause-btn">⏸ 暂停</button>
+          <button id="reset-btn">⟲ 重置</button>
+          <button id="step-btn">→ 单步</button>
+        </div>
+      </div>
+
+      <!-- 性能公式控制面板 -->
+      <div id="performance-controls" class="controls-panel" style="display: none;">
+        <h2>性能公式计算</h2>
+        <div class="formula-display">
+          <p>执行时间 = 指令数 × CPI × 时钟周期</p>
+        </div>
+        
+        <div class="control-group">
+          <label>指令数 (Instructions)：</label>
+          <input type="range" id="instruction-count" min="100" max="10000" value="1000" step="100">
+          <span id="instruction-count-value">1000</span>
+        </div>
+        
+        <div class="control-group">
+          <label>CPI (Cycles Per Instruction)：</label>
+          <input type="range" id="cpi" min="0.5" max="5" value="1.5" step="0.1">
+          <span id="cpi-value">1.5</span>
+        </div>
+        
+        <div class="control-group">
+          <label>时钟周期 (ns)：</label>
+          <input type="range" id="clock-cycle" min="0.1" max="10" value="1" step="0.1">
+          <span id="clock-cycle-value">1.0</span> ns
+        </div>
+        
+        <div class="result-display">
+          <h3>计算结果</h3>
+          <p>执行时间: <span id="exec-time">1500</span> ns</p>
+          <p>主频: <span id="freq">1000</span> MHz</p>
+          <p>MIPS: <span id="mips">666.67</span></p>
+        </div>
+      </div>
+    </main>
+
+    <!-- 统计信息面板 -->
+    <aside class="stats-panel">
+      <h2>性能统计</h2>
+      <div class="stat-item">
+        <label>当前周期：</label>
+        <span id="current-cycle">0</span>
+      </div>
+      <div class="stat-item">
+        <label>已完成指令：</label>
+        <span id="completed-instructions">0</span>
+      </div>
+      <div class="stat-item">
+        <label>IPC：</label>
+        <span id="ipc">0.00</span>
+      </div>
+      <div class="stat-item">
+        <label>吞吐率：</label>
+        <span id="throughput">0.00</span>
+      </div>
+      <div class="stat-item">
+        <label>流水线效率：</label>
+        <span id="efficiency">0%</span>
+      </div>
+      <div class="stat-item">
+        <label>停顿周期：</label>
+        <span id="stall-cycles">0</span>
+      </div>
+    </aside>
+
+    <!-- 日志和事件面板 -->
+    <footer class="log-panel">
+      <h3>事件日志</h3>
+      <div id="event-log"></div>
+    </footer>
+  </div>
+
+  <script type="module" src="/src/main.ts"></script>
+</body>
 </html>

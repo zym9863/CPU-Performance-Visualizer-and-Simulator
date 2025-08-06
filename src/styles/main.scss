@@ -1,0 +1,466 @@
+// 变量定义
+$primary-color: #4285f4;
+$secondary-color: #34a853;
+$warning-color: #fbbc04;
+$danger-color: #ea4335;
+$dark-bg: #1a1a2e;
+$panel-bg: #16213e;
+$text-color: #e0e0e0;
+$border-color: #2c3e50;
+
+// 全局样式
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: $dark-bg;
+  color: $text-color;
+  overflow: hidden;
+}
+
+#app {
+  display: grid;
+  grid-template-areas:
+    "header header header"
+    "main main stats"
+    "main main stats"
+    "log log log";
+  grid-template-columns: 1fr 1fr 300px;
+  grid-template-rows: 60px 1fr 1fr 150px;
+  height: 100vh;
+  gap: 10px;
+  padding: 10px;
+}
+
+// 头部控制面板
+.control-panel {
+  grid-area: header;
+  background: $panel-bg;
+  border-radius: 8px;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+
+  h1 {
+    font-size: 24px;
+    background: linear-gradient(135deg, $primary-color, $secondary-color);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin: 0;
+  }
+
+  .mode-selector {
+    display: flex;
+    gap: 10px;
+
+    .mode-btn {
+      padding: 8px 20px;
+      background: transparent;
+      border: 2px solid $border-color;
+      color: $text-color;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 14px;
+      font-weight: 500;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.1);
+        transform: translateY(-2px);
+      }
+
+      &.active {
+        background: $primary-color;
+        border-color: $primary-color;
+        color: white;
+      }
+    }
+  }
+}
+
+// 主视图区域
+.visualization-container {
+  grid-area: main;
+  background: $panel-bg;
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+
+  #three-canvas {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    
+    canvas {
+      width: 100% !important;
+      height: 100% !important;
+    }
+  }
+
+  .controls-panel {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: rgba(22, 33, 62, 0.95);
+    border-radius: 8px;
+    padding: 20px;
+    width: 300px;
+    max-height: calc(100% - 40px);
+    overflow-y: auto;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+
+    h2 {
+      color: $primary-color;
+      margin-bottom: 15px;
+      font-size: 18px;
+      border-bottom: 2px solid $border-color;
+      padding-bottom: 10px;
+    }
+
+    .control-group {
+      margin-bottom: 15px;
+
+      label {
+        display: block;
+        margin-bottom: 5px;
+        font-size: 13px;
+        color: #b0b0b0;
+        font-weight: 500;
+      }
+
+      input[type="range"] {
+        width: 100%;
+        margin: 5px 0;
+        -webkit-appearance: none;
+        appearance: none;
+        height: 6px;
+        background: $border-color;
+        border-radius: 3px;
+        outline: none;
+
+        &::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          appearance: none;
+          width: 18px;
+          height: 18px;
+          background: $primary-color;
+          border-radius: 50%;
+          cursor: pointer;
+          transition: all 0.2s;
+
+          &:hover {
+            transform: scale(1.2);
+            box-shadow: 0 0 10px $primary-color;
+          }
+        }
+
+        &::-moz-range-thumb {
+          width: 18px;
+          height: 18px;
+          background: $primary-color;
+          border-radius: 50%;
+          cursor: pointer;
+        }
+      }
+
+      textarea {
+        width: 100%;
+        background: rgba(0, 0, 0, 0.3);
+        border: 1px solid $border-color;
+        color: $text-color;
+        padding: 8px;
+        border-radius: 4px;
+        font-family: 'Courier New', monospace;
+        font-size: 12px;
+        resize: vertical;
+
+        &:focus {
+          outline: none;
+          border-color: $primary-color;
+        }
+      }
+
+      button {
+        width: 100%;
+        padding: 8px;
+        background: $primary-color;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-top: 5px;
+        transition: all 0.3s;
+
+        &:hover {
+          background: darken($primary-color, 10%);
+          transform: translateY(-2px);
+          box-shadow: 0 4px 10px rgba($primary-color, 0.4);
+        }
+      }
+    }
+
+    .control-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 15px;
+
+      button {
+        padding: 10px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: 500;
+        transition: all 0.3s;
+
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        &:active {
+          transform: translateY(0);
+        }
+      }
+    }
+
+    .formula-display {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 15px;
+      border-radius: 5px;
+      margin-bottom: 20px;
+      text-align: center;
+
+      p {
+        margin: 0;
+        font-size: 16px;
+        color: $secondary-color;
+        font-weight: 500;
+      }
+    }
+
+    .result-display {
+      background: linear-gradient(135deg, rgba(66, 133, 244, 0.1), rgba(52, 168, 83, 0.1));
+      padding: 15px;
+      border-radius: 5px;
+      margin-top: 20px;
+      border: 1px solid $border-color;
+
+      h3 {
+        color: $secondary-color;
+        margin-bottom: 10px;
+        font-size: 16px;
+      }
+
+      p {
+        margin: 5px 0;
+        font-size: 14px;
+
+        span {
+          color: $warning-color;
+          font-weight: bold;
+          font-size: 16px;
+        }
+      }
+    }
+  }
+}
+
+// 统计面板
+.stats-panel {
+  grid-area: stats;
+  background: $panel-bg;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+
+  h2 {
+    color: $secondary-color;
+    margin-bottom: 20px;
+    font-size: 18px;
+    border-bottom: 2px solid $border-color;
+    padding-bottom: 10px;
+  }
+
+  .stat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
+    label {
+      color: #b0b0b0;
+      font-size: 14px;
+    }
+
+    span {
+      color: $warning-color;
+      font-weight: bold;
+      font-size: 16px;
+      font-family: 'Courier New', monospace;
+    }
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+}
+
+// 日志面板
+.log-panel {
+  grid-area: log;
+  background: $panel-bg;
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+
+  h3 {
+    color: $primary-color;
+    margin-bottom: 10px;
+    font-size: 16px;
+  }
+
+  #event-log {
+    height: calc(100% - 30px);
+    overflow-y: auto;
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+
+    .log-entry {
+      padding: 5px;
+      margin-bottom: 3px;
+      border-radius: 3px;
+      display: flex;
+      align-items: center;
+
+      .log-time {
+        color: #666;
+        margin-right: 10px;
+        min-width: 80px;
+      }
+
+      .log-message {
+        flex: 1;
+      }
+
+      &.log-info {
+        background: rgba(66, 133, 244, 0.1);
+        border-left: 3px solid $primary-color;
+      }
+
+      &.log-warning {
+        background: rgba(251, 188, 4, 0.1);
+        border-left: 3px solid $warning-color;
+      }
+
+      &.log-error {
+        background: rgba(234, 67, 53, 0.1);
+        border-left: 3px solid $danger-color;
+      }
+    }
+
+    // 自定义滚动条
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: $border-color;
+      border-radius: 4px;
+
+      &:hover {
+        background: lighten($border-color, 10%);
+      }
+    }
+  }
+}
+
+// 响应式设计
+@media (max-width: 1200px) {
+  #app {
+    grid-template-areas:
+      "header header"
+      "main main"
+      "stats stats"
+      "log log";
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 60px 1fr auto 150px;
+  }
+
+  .stats-panel {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+
+    .stat-item {
+      flex: 1;
+      min-width: 150px;
+    }
+  }
+}
+
+// 动画
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes glow {
+  0% {
+    box-shadow: 0 0 5px rgba(66, 133, 244, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(66, 133, 244, 0.8);
+  }
+  100% {
+    box-shadow: 0 0 5px rgba(66, 133, 244, 0.5);
+  }
+}
+
+// 加载动画
+.loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  
+  &::after {
+    content: '';
+    display: block;
+    width: 50px;
+    height: 50px;
+    border: 3px solid $primary-color;
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: spin 1s linear infinite;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
